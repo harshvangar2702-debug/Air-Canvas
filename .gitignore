@@ -1,0 +1,13 @@
+node_modules
+dist
+dist-ssr
+*.local
+.DS_Store
+.web-tests
+.web-tests-devserver.log
+.claude
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea
