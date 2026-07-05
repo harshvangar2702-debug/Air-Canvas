@@ -1,10 +1,12 @@
-# AirInk ✋🎨
+# AirCanvas
 
-Draw in 3D mid-air using only your laptop webcam and hand gestures.
-Pinch to draw, grab to move, and orbit to see your creation float in space.
+Draw in 3D mid-air using nothing but your laptop webcam and hand gestures.
+Pinch to draw, fist to grab and move, open palm to erase, orbit with two
+hands to fly around your creation — all tracked locally, no video ever
+leaves your device.
 
 ## Stack
-TypeScript · Vite · MediaPipe Tasks (Hand Landmarker) · Three.js · Rapier (WASM)
+TypeScript · Vite · MediaPipe Tasks Vision (Hand Landmarker) · Three.js · Rapier3D (WASM)
 
 ## Requirements
 - Modern Chrome/Edge (WebGL2 + WASM)
@@ -15,50 +17,47 @@ TypeScript · Vite · MediaPipe Tasks (Hand Landmarker) · Three.js · Rapier (W
 ```bash
 npm install
 npm run dev
+```
 Open the printed localhost URL and allow camera access.
 
-Controls
-Pinch (thumb + index): draw a stroke
-Fist / grab: move the nearest stroke
-Deliberate erase gesture: delete a stroke
-Mouse drag / scroll: orbit & zoom the camera
-HUD: color, thickness, physics toggle, reset, export
-Privacy
-All processing is local. No video ever leaves your device.
+## Controls
 
-Known limitations (v1)
-A single webcam cannot measure true depth; v1 draws on a fixed-depth plane and gets its 3D feel from rendering + camera orbit.
-Gestures work best with the palm facing the camera.
-Copy
----
+### Draw mode (default)
+| Gesture | Action |
+|---|---|
+| Pinch (thumb + index) | Draw a stroke |
+| Fist / grab | Move the nearest stroke |
+| Open palm (while Eraser is toggled on) | Wipe strokes |
+| `O` key | Switch to Orbit mode |
 
-## `CLAUDE.md`  (project rules Claude Code auto-reads)
+### Orbit mode (`O`)
+| Gesture | Action |
+|---|---|
+| Two-hand pinch, move apart/together | Zoom |
+| Two-hand pinch, twist | Rotate around the scene |
+| One open palm | Rotate the view |
+| Mouse drag / scroll | Orbit & zoom (always available) |
 
-```markdown
-# CLAUDE.md — Working agreement for AirInk
+### Toolbar
+- **Shape tools** — Freeform, Line, Rectangle, Square, Circle, Ellipse, Triangle, Arrow.
+  Pick a shape tool and your stroke snaps to the ideal form on release; Freeform keeps the raw path.
+- **Pen styles** — Solid, Glow, Marker, Calligraphy (tapered), Dashed.
+- **Colors & thickness** — swatch palette, S/M/L stroke width.
+- **Eraser** — toggle on, then open-palm wipe removes strokes near your hand.
+- **Gravity** — drop physics on/off for drawn strokes (Rapier3D).
+- **Clear** — wipes the canvas.
+- **Export GLTF** — downloads the scene as a `.gltf` file.
 
-## Read first
-Read PRD.md, DESIGN.md, GESTURES.md, and ROADMAP.md before writing code.
+## Privacy
+All hand tracking and rendering happens locally in the browser. No video or
+landmark data is ever sent anywhere.
 
-## Principles
-- Build strictly milestone-by-milestone per ROADMAP.md. Do NOT skip ahead.
-- After each milestone, ensure `npm run dev` runs with no console errors and
-  STOP for me to verify before continuing.
-- Keep the all-browser TypeScript stack. No Python unless I explicitly ask.
-- Small, focused modules matching the file layout in DESIGN.md §3.
-- Prefer clarity over cleverness. Comment the non-obvious math (coord mapping,
-  gesture metrics, One Euro filter).
+## Known limitations (v1)
+- A single webcam cannot measure true depth — AirCanvas draws on a fixed-depth
+  plane and gets its 3D feel from rendering, physics, and camera orbit, not
+  measured hand distance.
+- Gestures work best with the palm facing the camera and reasonable, even lighting.
 
-## Constraints
-- Do NOT assume real depth from the webcam. Use the fixed drawing plane (v1).
-- All gesture detection MUST use hysteresis + smoothing to avoid flicker.
-- Dispose Three.js geometries/materials you no longer use.
-- Handle camera-permission-denied gracefully.
-
-## Definition of done (per milestone)
-- Runs locally, no errors.
-- Behavior matches the milestone description.
-- Brief note in commit message: which milestone + what to test manually.
-
-## Tech pins
-- three, @mediapipe/tasks-vision, @dimforge/rapier3d-compat, vite, typescript.
+## Project docs
+See `PRD.md`, `DESIGN.md`, `GESTURES.md`, and `ROADMAP.md` for the product spec,
+architecture, gesture design, and milestone history behind this build.
