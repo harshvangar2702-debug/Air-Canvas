@@ -135,6 +135,16 @@ function setOrbitMode(on: boolean) {
 setOrbitMode(false); // initialize hint text
 window.addEventListener('keydown', (e) => {
   if (e.key === 'o' || e.key === 'O') setOrbitMode(!orbitMode);
+  // Undo: Ctrl+Z
+  if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
+    e.preventDefault();
+    strokeManager.undo();
+  }
+  // Redo: Ctrl+Y or Ctrl+Shift+Z
+  if ((e.ctrlKey || e.metaKey) && (e.key === 'y' || (e.key === 'z' && e.shiftKey))) {
+    e.preventDefault();
+    strokeManager.redo();
+  }
 });
 
 // --- Tool + physics controls (top-right buttons) ---------------------------
@@ -205,6 +215,15 @@ controls.addButton(icon('trash'), 'Clear all', () => {
 // Export the finalized strokes to a downloadable .gltf (PRD F10).
 controls.addButton(icon('download'), 'Export GLTF', () => {
   exportToGLTF(strokeManager.all.map((s) => s.mesh));
+});
+
+// Undo / Redo buttons
+controls.addDivider();
+controls.addButton(icon('undo'), 'Undo (Ctrl+Z)', () => {
+  strokeManager.undo();
+});
+controls.addButton(icon('redo'), 'Redo (Ctrl+Y)', () => {
+  strokeManager.redo();
 });
 
 // Reused scratch vectors so the per-frame mapping allocates nothing.
