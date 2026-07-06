@@ -7,8 +7,10 @@ dist-ssr
 .web-tests-devserver.log
 .claude
 
-# Ignore documentation md files
+# Ignore documentation markdown files except the project README
 *.md
+!readme.md
+!README.md
 
 # Editor
 .vscode/*
